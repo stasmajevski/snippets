@@ -1,8 +1,12 @@
 module.exports = {
   purge: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        header: ["Rubik", "sans-serif"]
+      }
+    }
   },
   variants: {},
-  plugins: [],
-}
+  plugins: []
+};

@@ -1,5 +1,7 @@
 <template>
-  <div class="container bg-blue-500">Home</div>
+  <div class="container">
+    <h1>Snippets</h1>
+  </div>
 </template>
 
 <script>
