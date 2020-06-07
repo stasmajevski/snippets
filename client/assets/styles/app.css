@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-200;
+  @apply bg-gray-200 pb-16;
 }
 
 h1,
