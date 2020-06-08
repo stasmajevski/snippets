@@ -11,6 +11,11 @@ class Snippet extends Model
         'title'
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -25,5 +30,10 @@ class Snippet extends Model
     public function steps()
     {
         return $this->hasMany(Step::class)->orderBy('order', 'asc');
+    }
+
+    public function user()
+    {
+        $this->belongsTo(User::class);
     }
 }
