@@ -20,11 +20,11 @@
     </div>
     <div class="container">
       <div class="flex items-center mb-6">
-        <div class="text-xl text-gray-600 font-medium mr-3">
-          1/1.
+        <div class="text-xl text-gray-600 font-header font-medium mr-3">
+          {{ currentStepIndex + 1 }}/{{ steps.length }}.
         </div>
         <input
-          class="w-full text-xl text-gray-600 font-medium p-2 py-1 bg-transparent border-gray-400 border-2 rounded border-dashed"
+          class="w-full text-xl text-gray-600 font-medium font-header p-2 py-1 bg-transparent border-gray-400 border-2 rounded border-dashed"
           type="text"
           value=""
           placeholder="Untitled step"
@@ -36,11 +36,7 @@
           class="w-full lg:w-8/12 lg:mr-16 flex flex-wrap lg:flex-no-wrap justify-between items-start mb-8"
         >
           <div class="order-first flex flex-row lg:flex-col mr-2">
-            <nuxt-link
-              :to="{}"
-              class="block mb-2 p-3 bg-blue-500 rounded-lg mr-2 lg:mr-0"
-              title="Previous step"
-            >
+            <StepNavigationButton :step="previousStep">
               <svg
                 class="fill-current text-white h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +46,8 @@
                   d="M5.41 11H21a1 1 0 0 1 0 2H5.41l5.3 5.3a1 1 0 0 1-1.42 1.4l-7-7a1 1 0 0 1 0-1.4l7-7a1 1 0 0 1 1.42 1.4L5.4 11z"
                 />
               </svg>
-            </nuxt-link>
+            </StepNavigationButton>
+
             <nuxt-link
               :to="{}"
               class="block mb-2 p-3 bg-blue-500 rounded-lg"
@@ -82,11 +79,7 @@
           <div
             class="order-first lg:order-last flex flex-row-reverse lg:flex-col"
           >
-            <nuxt-link
-              :to="{}"
-              class="block mb-2 p-3 bg-blue-500 rounded-lg mr-2 lg:mr-0"
-              title="Next step"
-            >
+            <StepNavigationButton :step="nextStep">
               <svg
                 class="fill-current text-white h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +89,7 @@
                   d="M18.59 13H3a1 1 0 0 1 0-2h15.59l-5.3-5.3a1 1 0 1 1 1.42-1.4l7 7a1 1 0 0 1 0 1.4l-7 7a1 1 0 0 1-1.42-1.4l5.3-5.3z"
                 />
               </svg>
-            </nuxt-link>
+            </StepNavigationButton>
             <nuxt-link
               :to="{}"
               class="block mb-2 p-3 bg-blue-500 rounded-lg mr-2 lg:mr-0"
@@ -166,14 +159,23 @@
 </template>
 
 <script>
-import { orderBy as _orderBy } from "lodash";
 import { debounce as _debounce } from "lodash";
 
+import browseSnippet from "@/mixins/snippets/browseSnippet";
+
 import StepList from "../components/StepList";
+import StepNavigationButton from "../components/StepNavigationButton";
 
 export default {
   components: {
-    StepList
+    StepList,
+    StepNavigationButton
+  },
+
+  head() {
+    return {
+      title: `Editing ${this.snippet.title || "Untitled snippet"}`
+    };
   },
 
   data() {
@@ -182,6 +184,8 @@ export default {
       steps: []
     };
   },
+
+  mixins: [browseSnippet],
 
   watch: {
     "snippet.title": {
@@ -205,24 +209,6 @@ export default {
           }
         );
       }, 500)
-    }
-  },
-
-  computed: {
-    orderedStepsAsc() {
-      return _orderBy(this.steps, "order", "asc");
-    },
-
-    firstStep() {
-      return this.orderedStepsAsc[0];
-    },
-
-    currentStep() {
-      return (
-        this.orderedStepsAsc.find(
-          step => step.uuid === this.$route.query.step
-        ) || this.firstStep
-      );
     }
   },
 
