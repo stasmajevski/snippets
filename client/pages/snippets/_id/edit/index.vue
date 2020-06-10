@@ -7,6 +7,7 @@
             class="text-4xl text-gray-700 font-header leading-tight mb-4 w-full block p-2 border-gray-400 border-2 rounded border-dashed"
             value=""
             placeholder="Untitled snippet"
+            v-model="snippet.title"
           />
           <div class="text-gray-600">
             Created by
@@ -27,6 +28,7 @@
           type="text"
           value=""
           placeholder="Untitled step"
+          v-model="currentStep.title"
         />
       </div>
       <div class="flex flex-wrap lg:flex-no-wrap">
@@ -68,6 +70,7 @@
           </div>
           <div class="w-full lg:mr-2">
             <textarea
+              v-model="currentStep.body"
               class="w-full mb-6 border-dashed border-2 border-gray-400 rounded-lg"
             >
             </textarea>
@@ -134,9 +137,15 @@
               Steps
             </h1>
             <ul>
-              <li class="mb-1" v-for="(step, index) in 5" :key="index">
-                <nuxt-link :class="{ 'font-bold': index === 0 }" :to="{}"
-                  >{{ index + 1 }}. Step title</nuxt-link
+              <li
+                class="mb-1"
+                v-for="(step, index) in orderedStepsAsc"
+                :key="index"
+              >
+                <nuxt-link
+                  :class="{ 'font-bold': currentStep.uuid === step.uuid }"
+                  :to="{}"
+                  >{{ index + 1 }}. {{ step.title }}</nuxt-link
                 >
               </li>
             </ul>
@@ -169,5 +178,67 @@
 </template>
 
 <script>
-export default {};
+import { orderBy as _orderBy } from "lodash";
+import { debounce as _debounce } from "lodash";
+export default {
+  data() {
+    return {
+      snippet: null,
+      steps: []
+    };
+  },
+
+  watch: {
+    "snippet.title": {
+      handler: _debounce(async function(title) {
+        await this.$axios.$patch(`snippets/${this.snippet.uuid}`, {
+          title
+        });
+      }, 500)
+    },
+
+    currentStep: {
+      // listening all properties
+      deep: true,
+
+      handler: _debounce(async function(step) {
+        await this.$axios.$patch(
+          `snippets/${this.snippet.uuid}/steps/${step.uuid}`,
+          {
+            title: step.title,
+            body: step.body
+          }
+        );
+      }, 500)
+    }
+  },
+
+  computed: {
+    orderedStepsAsc() {
+      return _orderBy(this.steps, "order", "asc");
+    },
+
+    firstStep() {
+      return this.orderedStepsAsc[0];
+    },
+
+    currentStep() {
+      return (
+        this.orderedStepsAsc.find(
+          step => step.uuid === this.$route.query.step
+        ) || this.firstStep
+      );
+    }
+  },
+
+  // nuxt buildin function
+  async asyncData({ app, params }) {
+    let snippet = await app.$axios.$get(`snippets/${params.id}`);
+
+    return {
+      snippet: snippet.data,
+      steps: snippet.data.steps.data
+    };
+  }
+};
 </script>
