@@ -34,5 +34,10 @@ class SnippetController extends Controller
         $snippet = $request->user()->snippets()->create([
             'uuid' => Str::uuid()
         ]);
+
+        return fractal()
+            ->item($snippet)
+            ->transformWith(new SnippetTransformer())
+            ->toArray();
     }
 }

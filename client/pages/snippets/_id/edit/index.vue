@@ -19,11 +19,11 @@
     </div>
     <div class="container">
       <div class="flex items-center mb-6">
-        <div class="text-xl text-gra-600 font-medium mr-3">
+        <div class="text-xl text-gray-600 font-medium mr-3">
           1/1.
         </div>
         <input
-          class="w-full text-xl text-gra-600 font-medium p-2 py-1 bg-transparent border-gray-400 border-2 rounded border-dashed"
+          class="w-full text-xl text-gray-600 font-medium p-2 py-1 bg-transparent border-gray-400 border-2 rounded border-dashed"
           type="text"
           value=""
           placeholder="Untitled step"
@@ -130,7 +130,7 @@
         </div>
         <div class="w-full lg:w-4/12">
           <div class="mb-8">
-            <h1 class="text-xl text-gra-600 font-medium mb-6">
+            <h1 class="text-xl text-gray-600 font-medium mb-6">
               Steps
             </h1>
             <ul>
