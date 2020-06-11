@@ -19,6 +19,11 @@ class Step extends Model
         return 'uuid';
     }
 
+    public function snippet()
+    {
+        return $this->belongsTo(Snippet::class);
+    }
+
     public static function boot()
     {
         parent::boot();
