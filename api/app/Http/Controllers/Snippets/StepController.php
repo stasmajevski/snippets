@@ -15,6 +15,15 @@ class StepController extends Controller
         $step->update($request->only('title', 'body'));
     }
 
+    public function destroy(Snippet $snippet, Step $step)
+    {
+        if($snippet->steps->count() === 1) {
+            return response(null, 400);
+        }
+
+        $step->delete();
+    }
+
     public function store(Snippet $snippet, Request $request)
     {
         $step = $snippet->steps()->create(array_merge($request->only('title', 'body'),[

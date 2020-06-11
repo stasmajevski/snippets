@@ -86,22 +86,12 @@
               :currentStep="currentStep"
               @added="handleStepAdded"
             />
-            <nuxt-link
-              :to="{}"
-              class="block mb-2 p-3 bg-blue-500 rounded-lg mr-2 lg:mr-0"
-              title="Delete step"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="fill-current text-white h-6 w-6"
-              >
-                <path
-                  class="heroicon-ui"
-                  d="M8 6V4c0-1.1.9-2 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8H3a1 1 0 1 1 0-2h5zM6 8v12h12V8H6zm8-2V4h-4v2h4zm-4 4a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0v-6a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0v-6a1 1 0 0 1 1-1z"
-                />
-              </svg>
-            </nuxt-link>
+            <DeleteStepButton
+              v-if="steps.length > 1"
+              :snippet="snippet"
+              :currentStep="currentStep"
+              @deleted="handleStepDeleted"
+            />
           </div>
         </div>
         <div class="w-full lg:w-4/12">
@@ -111,6 +101,19 @@
             </h1>
             <StepList :steps="orderedStepsAsc" :currentStep="currentStep" />
           </div>
+
+          <div class="borde-t-2 border-gray-300 py-6">
+            <h1 class="text-xl text-gray-600 font-medium mb-6">
+              Publishing
+            </h1>
+            <div class="text-gray-500 text-sm mb-6">
+              <template v-if="lastSaved"
+                >Last saved at {{ lastSavedFormatted }}</template
+              >
+              <template v-else>No changes saved in this session yet</template>
+            </div>
+          </div>
+
           <div class="text-gray-500 text-sm">
             Use
             <div
@@ -140,18 +143,21 @@
 
 <script>
 import { debounce as _debounce } from "lodash";
+import moment from "moment";
 
 import browseSnippet from "@/mixins/snippets/browseSnippet";
 
 import StepList from "../components/StepList";
 import StepNavigationButton from "../components/StepNavigationButton";
 import AddStepButton from "./components/AddStepButton";
+import DeleteStepButton from "./components/DeleteStepButton";
 
 export default {
   components: {
     StepList,
     StepNavigationButton,
-    AddStepButton
+    AddStepButton,
+    DeleteStepButton
   },
 
   head() {
@@ -163,7 +169,9 @@ export default {
   data() {
     return {
       snippet: null,
-      steps: []
+      steps: [],
+
+      lastSaved: null
     };
   },
 
@@ -175,6 +183,8 @@ export default {
         await this.$axios.$patch(`snippets/${this.snippet.uuid}`, {
           title
         });
+
+        this.touchLastSaved();
       }, 500)
     },
 
@@ -190,15 +200,37 @@ export default {
             body: step.body
           }
         );
+
+        this.touchLastSaved();
       }, 500)
     }
   },
 
+  computed: {
+    lastSavedFormatted() {
+      return moment(this.lastSaved).format("hh:mm:ss");
+    }
+  },
+
   methods: {
+    touchLastSaved() {
+      this.lastSaved = moment.now();
+    },
+
     handleStepAdded(step) {
       this.steps.push(step);
 
       this.goToStep(step);
+    },
+
+    handleStepDeleted(step) {
+      let previousStep = this.previousStep;
+
+      this.steps = this.steps.filter(s => {
+        return s.uuid !== step.uuid;
+      });
+
+      this.goToStep(previousStep || this.firstStep);
     },
 
     goToStep(step) {

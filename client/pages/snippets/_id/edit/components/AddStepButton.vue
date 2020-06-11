@@ -1,5 +1,6 @@
 <template>
   <a
+    href="#"
     @click.prevent="addStep"
     class="block mb-2 p-3 bg-blue-500 rounded-lg"
     :title="`Add step ${position}`"
@@ -39,7 +40,10 @@ export default {
   methods: {
     async addStep() {
       let response = await this.$axios.$post(
-        `snippets/${this.snippet.uuid}/steps`
+        `snippets/${this.snippet.uuid}/steps`,
+        {
+          [this.position]: this.currentStep.uuid
+        }
       );
 
       this.$emit("added", response.data);
