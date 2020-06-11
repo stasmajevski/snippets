@@ -18,7 +18,7 @@ class StepTransformer extends TransformerAbstract
         return [
             'uuid' => $step->uuid,
             'order' => (float) $step->order,
-            'title' => $step->title ?: '',
+            'title' => $step->title ?: 'Untitled step',
             'body' => $step->body ?: ''
         ];
     }

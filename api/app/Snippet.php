@@ -8,7 +8,8 @@ class Snippet extends Model
 {
     protected $fillable = [
         'uuid',
-        'title'
+        'title',
+        'is_public',
     ];
 
     public function getRouteKeyName()

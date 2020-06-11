@@ -45,8 +45,9 @@ class SnippetController extends Controller
     {
         $this->validate($request, [
             'title' => 'nullable',
+            'is_public' => 'nullable|boolean'
         ]);
 
-        $snippet->update($request->only('title'));
+        $snippet->update($request->only('title', 'is_public'));
     }
 }
