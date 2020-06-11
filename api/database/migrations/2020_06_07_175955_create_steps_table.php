@@ -20,7 +20,7 @@ class CreateStepsTable extends Migration
                 ->onDelete('cascade');
             $table->uuid('uuid');
             $table->string('title')->nullable();
-            $table->unsignedInteger('order')->index();
+            $table->decimal('order')->index();
             $table->string('body')->nullable();
 
             $table->timestamps();

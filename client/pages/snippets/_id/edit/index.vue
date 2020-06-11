@@ -48,22 +48,12 @@
               </svg>
             </StepNavigationButton>
 
-            <nuxt-link
-              :to="{}"
-              class="block mb-2 p-3 bg-blue-500 rounded-lg"
-              title="Add step before"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="fill-current text-white h-6 w-6"
-              >
-                <path
-                  class="heroicon-ui"
-                  d="M17 11a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4h4z"
-                />
-              </svg>
-            </nuxt-link>
+            <AddStepButton
+              position="before"
+              :snippet="snippet"
+              :currentStep="currentStep"
+              @added="handleStepAdded"
+            />
           </div>
           <div class="w-full lg:mr-2">
             <textarea
@@ -90,22 +80,12 @@
                 />
               </svg>
             </StepNavigationButton>
-            <nuxt-link
-              :to="{}"
-              class="block mb-2 p-3 bg-blue-500 rounded-lg mr-2 lg:mr-0"
-              title="Add step after"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="fill-current text-white h-6 w-6"
-              >
-                <path
-                  class="heroicon-ui"
-                  d="M17 11a1 1 0 0 1 0 2h-4v4a1 1 0 0 1-2 0v-4H7a1 1 0 0 1 0-2h4V7a1 1 0 0 1 2 0v4h4z"
-                />
-              </svg>
-            </nuxt-link>
+            <AddStepButton
+              position="after"
+              :snippet="snippet"
+              :currentStep="currentStep"
+              @added="handleStepAdded"
+            />
             <nuxt-link
               :to="{}"
               class="block mb-2 p-3 bg-blue-500 rounded-lg mr-2 lg:mr-0"
@@ -165,11 +145,13 @@ import browseSnippet from "@/mixins/snippets/browseSnippet";
 
 import StepList from "../components/StepList";
 import StepNavigationButton from "../components/StepNavigationButton";
+import AddStepButton from "./components/AddStepButton";
 
 export default {
   components: {
     StepList,
-    StepNavigationButton
+    StepNavigationButton,
+    AddStepButton
   },
 
   head() {
@@ -209,6 +191,22 @@ export default {
           }
         );
       }, 500)
+    }
+  },
+
+  methods: {
+    handleStepAdded(step) {
+      this.steps.push(step);
+
+      this.goToStep(step);
+    },
+
+    goToStep(step) {
+      this.$router.push({
+        query: {
+          step: step.uuid
+        }
+      });
     }
   },
 
