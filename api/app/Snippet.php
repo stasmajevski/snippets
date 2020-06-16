@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Snippet extends Model
@@ -31,6 +32,11 @@ class Snippet extends Model
     public function isPublic()
     {
         return $this->is_public;
+    }
+
+    public function scopePublic(Builder $builder)
+    {
+        return $builder->where('is_public', true);
     }
 
     public function steps()

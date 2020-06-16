@@ -13,9 +13,15 @@
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.3.6",
+    "codemirror": "^5.54.0",
     "dotenv": "^8.2.0",
+    "highlight.js": "^10.1.0",
+    "hotkeys-js": "^3.8.1",
+    "markdown-it": "^11.0.0",
     "moment": "^2.26.0",
+    "node-sass": "^4.14.1",
     "nuxt": "^2.0.0",
+    "sass-loader": "^8.0.2",
     "tailwindcss": "^1.4.6",
     "tailwindcss-transforms": "^2.2.0"
   },

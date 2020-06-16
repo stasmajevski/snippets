@@ -25,6 +25,13 @@ p {
   @apply text-gray-600 mb-6 leading-relaxed;
 }
 
+pre {
+  @apply break-all whitespace-pre-wrap;
+}
+
 .container {
   @apply w-10/12 mx-auto;
 }
+
+@import "vendor/hljs.scss";
+@import "codemirror/lib/codemirror.css";

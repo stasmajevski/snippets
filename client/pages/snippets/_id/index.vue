@@ -4,7 +4,7 @@
       <div class="container py-10 pb-16">
         <div class="w-10/12">
           <h1 class="text-4xl text-gray-700 font-medium leading-tight mb-4">
-            {{ snippet.title }}
+            {{ snippet.title || "Untitled snippet" }}
           </h1>
           <div class="text-gray-600">
             Created by
@@ -37,7 +37,7 @@
             </StepNavigationButton>
           </div>
           <div class="bg-white p-8 rounded-lg text-gray-600 w-full lg:mr-2">
-            {{ currentStep.body }}
+            <StepMarkdown :value="currentStep.body" />
           </div>
           <div class="order-first lg:order-last flex flex-row lg:flex-col">
             <StepNavigationButton :step="nextStep">
@@ -52,6 +52,7 @@
               </svg>
             </StepNavigationButton>
             <nuxt-link
+              v-if="snippet.user.data.owner"
               :to="{
                 name: 'snippets-id-edit',
                 params: { id: snippet.uuid },
@@ -112,12 +113,14 @@
 import browseSnippet from "@/mixins/snippets/browseSnippet";
 
 import StepList from "./components/StepList";
+import StepMarkdown from "@/components/snippets/StepMarkdown";
 import StepNavigationButton from "./components/StepNavigationButton";
 
 export default {
   components: {
     StepList,
-    StepNavigationButton
+    StepNavigationButton,
+    StepMarkdown
   },
 
   head() {

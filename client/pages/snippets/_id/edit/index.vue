@@ -56,14 +56,7 @@
             />
           </div>
           <div class="w-full lg:mr-2">
-            <textarea
-              v-model="currentStep.body"
-              class="w-full mb-6 border-dashed border-2 border-gray-400 rounded-lg"
-            >
-            </textarea>
-            <div class="bg-white p-8 rounded-lg text-gray-600">
-              Markdown content
-            </div>
+            <StepEditor :step="currentStep" v-model="currentStep.body" />
           </div>
 
           <div
@@ -168,6 +161,7 @@ import browseSnippet from "@/mixins/snippets/browseSnippet";
 import StepList from "../components/StepList";
 import StepNavigationButton from "../components/StepNavigationButton";
 import AddStepButton from "./components/AddStepButton";
+import StepEditor from "./components/StepEditor";
 import DeleteStepButton from "./components/DeleteStepButton";
 
 export default {
@@ -175,7 +169,8 @@ export default {
     StepList,
     StepNavigationButton,
     AddStepButton,
-    DeleteStepButton
+    DeleteStepButton,
+    StepEditor
   },
 
   head() {
@@ -259,14 +254,6 @@ export default {
       });
 
       this.goToStep(previousStep || this.firstStep);
-    },
-
-    goToStep(step) {
-      this.$router.push({
-        query: {
-          step: step.uuid
-        }
-      });
     }
   },
 
