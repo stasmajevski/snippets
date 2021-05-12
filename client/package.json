@@ -13,7 +13,7 @@
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.3.6",
-    "codemirror": "^5.54.0",
+    "codemirror": "^5.58.2",
     "dotenv": "^8.2.0",
     "highlight.js": "^10.1.0",
     "hotkeys-js": "^3.8.1",
